@@ -67,7 +67,7 @@ const deleteCustomer = async (req, res) => {
             return res.status(404).send({message: "Customer not found"})
         }
         await customer.destroy()
-        return res.status(204).send()
+        return res.status(204).send({message: "Customer deleted"})
 
     } catch (error) {
         errorHandler(error, res)
