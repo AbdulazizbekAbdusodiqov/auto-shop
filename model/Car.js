@@ -23,7 +23,7 @@ const Car = sequelize.define("car", {
         type: DataTypes.ENUM("Petrol", "Diesel", "metan", "Electric", "Hybrid")
     },
     car_type: {
-        type: DataTypes.ENUM("Sedan", "Coupe", "SUV", "Hatchback", "Convertible", "Wagon", "Van", "Truck")
+        type: DataTypes.ENUM("Sedan", "Hatchback", "SUV", "Coupe", "Convertible", "Wagon", "Van", "Pickup", "Minivan")
     },
     gearBox: {
         type: DataTypes.ENUM("Manual", "Automatic")

@@ -1,16 +1,27 @@
 const errorHandler = require("../helpers/errorHandler");
 const Admin = require("../model/Admin");
 const Contract = require("../model/Contract");
+const bcrypt = require("bcrypt");
+const {adminValidation} = require("../validations/admin.validation");
 
 const createAdmin = async (req, res) => {
     try {
-        const { first_name, last_name, phone_number, email, password } = req.body;
+        const { email } = req.body;
+        
         const oldAdmin = await Admin.findOne({ where: { email } });
         if (oldAdmin) {
             return res.status(400).json({ message: "Admin already exists" });
         }
-        const hashed_password = await bcrypt.hash(password, 8);
-        const admin = await Admin.create({ first_name, last_name, phone_number, email, hashed_password });
+
+        const {error, value} = adminValidation(req.body);
+
+        if(error){
+            return errorHandler(error, res);
+        }
+        
+        const hashed_password = await bcrypt.hash(value.password, 7);
+        
+        const admin = await Admin.create({ ...value, hashed_password });
 
         return res.status(201).send(admin);
     } catch (error) {

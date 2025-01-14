@@ -5,8 +5,8 @@ const Model = require("../model/Model")
 
 const createBrand = async (req, res) => {
     try {
-        const { name } = req.body
-        const brand = await Brand.create({ name })
+        const { name, description } = req.body
+        const brand = await Brand.create({ name, description })
         return res.status(201).send(brand)
 
     } catch (error) {
@@ -42,12 +42,12 @@ const getBrandById = async (req, res) => {
 
 const updateBrand = async (req, res) => {
     try {
-        const { name } = req.body
         const brand = await Brand.findByPk(req.params.id, {include:[Car, Model]})
         if (!brand?.dataValues) {
             return res.status(404).send({message: "Brand not found"})
         }
-        await brand.update({ name })
+        const { name, description } = req.body
+        await brand.update({ name, description })
         return res.status(200).send(brand.dataValues)
 
     } catch (error) {

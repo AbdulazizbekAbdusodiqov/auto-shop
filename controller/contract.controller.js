@@ -1,3 +1,4 @@
+const { DATE } = require("sequelize")
 const errorHandler = require("../helpers/errorHandler")
 const Admin = require("../model/Admin")
 const Car = require("../model/Car")
@@ -9,14 +10,14 @@ const Plan = require("../model/Plan")
 
 const createContract = async (req, res) => {
     try {
-        const { adminId, CustomerId, term, PlanId, CarId, first_payment, month_day, contract_start_date, } = req.body
-
-        const car = await Car.findByPk(CarId)
-
+        const { adminId, CustomerId, planId, carId, first_payment, month_day } = req.body
+        
+        const car = await Car.findOne({where : {id : carId}})
+        
         if (!car?.dataValues) {
             return res.status(404).send({ message: "Car not found" })
         }
-        const plan = await Plan.findByPk(PlanId)
+        const plan = await Plan.findByPk(planId)
 
         if (!plan?.dataValues) {
             return res.status(404).send({ message: "Plan not found" })
@@ -24,12 +25,17 @@ const createContract = async (req, res) => {
         const total_price = (car.price - first_payment) * (plan.markup_rate * 0.01 + 1) + first_payment
         const monthly_payment = ((car.price - first_payment) * (plan.markup_rate * 0.01 + 1)) / plan.month
 
-        const contract = await Contract.create({ adminId, CustomerId, term, PlanId, CarId, first_payment, month_day, contract_start_date, monthly_payment, total_price })
+
+        const term =  new Date()
+        term.setMonth(term.getMonth() + plan.month)
+
+        
+        const contract = await Contract.create({ adminId, CustomerId, term, PlanId: planId, CarId: carId, first_payment, month_day, monthly_payment, total_price })
 
         return res.status(201).send({ message: "Contact created", contract })
 
     } catch (error) {
-        errorHandler(res, error)
+        errorHandler(error, res)
     }
 }
 
@@ -73,9 +79,9 @@ const updateContract = async (req, res) => {
         if (!contract?.dataValues) {
             return res.status(404).send({ message: "Contract not found" })
         }
-        const { adminId, CustomerId, term, PlanId, CarId, first_payment, month_day, contract_start_date, monthly_payment, total_price } = req.body
+        const { adminId, CustomerId, term, PlanId, CarId, first_payment, month_day, monthly_payment, total_price } = req.body
 
-        await contract.update({ adminId, CustomerId, term, PlanId, CarId, first_payment, month_day, contract_start_date, monthly_payment, total_price })
+        await contract.update({ adminId, CustomerId, term, PlanId, CarId, first_payment, month_day, monthly_payment, total_price })
 
         return res.status(200).send({ message: "Contract updated", contract })
 

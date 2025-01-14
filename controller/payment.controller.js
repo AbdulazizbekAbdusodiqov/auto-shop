@@ -5,10 +5,10 @@ const Payment = require("../model/Payment")
 
 const createPayment = async (req, res) => {
     try {
-        const { amount, payment_date, payment_method, contractId, customerId, status } = req.body
+        const { amount, payment_method, contractId, customerId, status } = req.body
 
 
-        const payment = await Payment.create({ amount, payment_date, payment_method, contractId, customerId, status })
+        const payment = await Payment.create({ amount, payment_method, contractId, customerId, status })
 
         return res.status(201).send(payment)
     } catch (error) {
@@ -56,9 +56,9 @@ const updatePayment = async (req, res) => {
         if (!payment?.dataValues) {
             return res.status(404).send({ message: "Payment not found" })
         }
-        const { amount, payment_date, payment_method, contractId, customerId, status } = req.body
+        const { amount, payment_method, contractId, customerId, status } = req.body
         
-        await payment.update({ amount, payment_date, payment_method, contractId, customerId, status })
+        await payment.update({ amount, payment_method, contractId, customerId, status })
 
         return res.status(200).send(payment)
 
