@@ -1,5 +1,6 @@
 const errorHandler = require("../helpers/errorHandler");
 const Admin = require("../model/Admin");
+const Contract = require("../model/Contract");
 
 const createAdmin = async (req, res) => {
     try {
@@ -19,7 +20,7 @@ const createAdmin = async (req, res) => {
 
 const getAdmins = async (req, res) => {
     try {
-        const admins = await Admin.findAll();
+        const admins = await Admin.findAll({include :Contract});
 
         if (admins?.dataValues?.length === 0) {
             return res.status(404).send({ message: "admin is not available" });
@@ -34,7 +35,7 @@ const getAdmins = async (req, res) => {
 const getAdminById = async (req, res) => {
     try {
 
-        const admin = await Admin.findByPk(req.params.id);
+        const admin = await Admin.findByPk(req.params.id, {include: Contract});
         if (!admin) {
             return res.status(404).json({ message: "Admin not found" });
         }
@@ -49,7 +50,7 @@ const updateAdmin = async (req, res) => {
     try {
 
         const { first_name, last_name, phone_number, email } = req.body;
-        const admin = await Admin.findByPk(req.params.id);
+        const admin = await Admin.findByPk(req.params.id,{include :Contract});
         if (!admin) {
             return res.status(404).json({ message: "Admin not found" });
         }

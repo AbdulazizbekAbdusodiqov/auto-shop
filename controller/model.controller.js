@@ -1,3 +1,5 @@
+const errorHandler = require("../helpers/errorHandler");
+const Brand = require("../model/Brand");
 const Model = require("../model/Model");
 
 const createModel = async (req, res) => {
@@ -12,7 +14,7 @@ const createModel = async (req, res) => {
 
 const getModels = async (req, res) => {
     try {
-        const models = await Model.findAll();
+        const models = await Model.findAll({include: Brand});
         if (models?.dataValues?.length === 0) {
             return res.status(404).send({ message: "Model is not available" });
         }
@@ -24,7 +26,7 @@ const getModels = async (req, res) => {
 
 const getModelById = async (req, res) => {
     try {
-        const model = await Model.findByPk(req.params.id);
+        const model = await Model.findByPk(req.params.id, {include: Brand});
         if (!model) {
             return res.status(404).send({ message: "Model not found" });
         }
@@ -37,7 +39,7 @@ const getModelById = async (req, res) => {
 const updateModel = async (req, res) => {
     try {
         const { name, brandId } = req.body;
-        const model = await Model.findByPk(req.params.id);
+        const model = await Model.findByPk(req.params.id,{include: Brand});
         if (!model) {
             return res.status(404).send({ message: "Model not found" });
         }

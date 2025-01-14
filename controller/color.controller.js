@@ -1,3 +1,5 @@
+const errorHandler = require("../helpers/errorHandler")
+const Car = require("../model/Car")
 const Color = require("../model/Color")
 
 const createColor = async (req, res) => {
@@ -13,7 +15,7 @@ const createColor = async (req, res) => {
 
 const getColors = async (req, res) => { 
     try {
-        const colors = await Color.findAll()
+        const colors = await Color.findAll({include : Car})
         if (!colors?.dataValues) {
             return res.status(404).send({message: "color not found"})
         }
@@ -26,7 +28,7 @@ const getColors = async (req, res) => {
 
 const getColorById = async (req, res) => {
     try {
-        const color = await Color.findByPk(req.params.id)
+        const color = await Color.findByPk(req.params.id, {include : Car})
         if (!color?.dataValues) {
             return res.status(404).send({message: "color not found"})
         }
@@ -40,7 +42,7 @@ const getColorById = async (req, res) => {
 const updateColor = async (req, res) => {
     try {
         const { name } = req.body
-        const color = await Color.findByPk(req.params.id)
+        const color = await Color.findByPk(req.params.id,  {include : Car})
         if (!color?.dataValues) {
             return res.status(404).send({message: "color not found"})
         }

@@ -1,4 +1,5 @@
 const errorHandler = require("../helpers/errorHandler")
+const Contract = require("../model/Contract")
 const Plan = require("../model/Plan")
 
 
@@ -18,7 +19,7 @@ const createPlan = async (req, res) => {
 
 const getPlans = async (req, res) => {
     try {
-        const plans = await Plan.findAll()
+        const plans = await Plan.findAll({include : Contract})
         
         if (!plans?.dataValues) {
             return res.status(404).send({message: "Plans not found"})
@@ -34,7 +35,7 @@ const getPlanById = async (req, res) => {
     try {
         const { id } = req.params
 
-        const plan = await Plan.findByPk(id)
+        const plan = await Plan.findByPk(id, {include : Contract})
 
         if (!plan?.dataValues) {
             return res.status(404).send({message: "Plan not found"})
@@ -53,7 +54,7 @@ const updatePlan = async (req, res) => {
         const { id } = req.params
         const { month, markup_rate } = req.body
 
-        const plan = await Plan.findByPk(id)
+        const plan = await Plan.findByPk(id,{include : Contract})
 
         if (!plan?.dataValues) {
             return res.status(404).send({message: "Plan not found"})

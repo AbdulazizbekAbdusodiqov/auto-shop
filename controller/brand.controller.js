@@ -1,4 +1,7 @@
+const errorHandler = require("../helpers/errorHandler")
 const Brand = require("../model/Brand")
+const Car = require("../model/Car")
+const Model = require("../model/Model")
 
 const createBrand = async (req, res) => {
     try {
@@ -13,7 +16,7 @@ const createBrand = async (req, res) => {
 
 const getBrands = async (req, res) => { 
     try {
-        const brands = await Brand.findAll()
+        const brands = await Brand.findAll({include:[Car, Model]})
         if (!brands?.dataValues) {
             return res.status(404).send({message: "Brand not found"})
         }
@@ -40,7 +43,7 @@ const getBrandById = async (req, res) => {
 const updateBrand = async (req, res) => {
     try {
         const { name } = req.body
-        const brand = await Brand.findByPk(req.params.id)
+        const brand = await Brand.findByPk(req.params.id, {include:[Car, Model]})
         if (!brand?.dataValues) {
             return res.status(404).send({message: "Brand not found"})
         }

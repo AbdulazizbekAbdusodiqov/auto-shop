@@ -2,6 +2,7 @@ const express = require("express")
 const config = require("config")
 const sequelize = require("./config/db")
 const mainRouter = require("./router/index.routes")
+const Payment = require("./model/Payment")
 
 const PORT = config.get("port")
 
@@ -13,7 +14,7 @@ app.use("/api", mainRouter)
 
 async function start() {
     try {
-        
+        Payment
         await sequelize.authenticate()
         await sequelize.sync({alter:true})
 

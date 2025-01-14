@@ -29,7 +29,7 @@ const Customer = sequelize.define("customer",
         pasport_seria : {
             type : DataTypes.STRING(9)
         },
-        pasport_jshr : {
+        pasport_jshshr : {
             type : DataTypes.STRING(16)
         },
         cart : {
