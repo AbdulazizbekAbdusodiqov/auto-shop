@@ -1,12 +1,19 @@
+const { date } = require("joi")
 const errorHandler = require("../helpers/errorHandler")
 const Brand = require("../model/Brand")
 const Car = require("../model/Car")
 const Model = require("../model/Model")
+const {brandValidation} = require("../validations/brand.validation")
 
 const createBrand = async (req, res) => {
     try {
-        const { name, description } = req.body
-        const brand = await Brand.create({ name, description })
+        const {error, value} = brandValidation(req.body)
+
+        if(error){
+            return errorHandler(error, res)
+        }
+
+        const brand = await Brand.create({ ...value })
         return res.status(201).send(brand)
 
     } catch (error) {
@@ -17,7 +24,10 @@ const createBrand = async (req, res) => {
 const getBrands = async (req, res) => { 
     try {
         const brands = await Brand.findAll({include:[Car, Model]})
-        if (!brands?.dataValues) {
+        
+        
+
+        if (!brands[0]?.dataValues) {
             return res.status(404).send({message: "Brand not found"})
         }
         return res.status(200).send(brands)
@@ -62,7 +72,8 @@ const deleteBrand = async (req, res) => {
             return res.status(404).send({message: "Brand not found"})
         }
         await brand.destroy()
-        return res.status(204).send({message:"Brand deleted"})
+
+        return res.status(200).send({message:"Brand deleted"})
 
     } catch (error) {
         errorHandler(error, res)

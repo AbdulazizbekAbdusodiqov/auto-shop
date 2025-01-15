@@ -4,19 +4,23 @@ const Car = require("../model/Car")
 const Color = require("../model/Color")
 const Contract = require("../model/Contract")
 const Model = require("../model/Model")
+const { carValidation } = require("../validations/car.validation")
 
 const createCar = async (req, res) => {
     try {
 
-        const { year, price, description, fuel_type, car_type, gearBox, engine, max_speed, img, modelId, colorId, brandId } = req.body
+        const {error, value} = carValidation(req.body)
 
-        const car = await Car.create({ year, price, description, fuel_type, car_type, gearBox, engine, max_speed, img, modelId, colorId, brandId })
+        if(error){
+            return errorHandler(error, res)
+        }
+
+        const car = await Car.create({ ...value })
 
         return res.status(201).send(car)
 
     } catch (error) {
-        -
-        errorHandler(res, error)
+        errorHandler(error, res)
     }
 }
 
@@ -24,11 +28,11 @@ const getCars = async (req, res) => {
     try {
         const cars = await Car.findAll({ include: [Brand, Model, Color, Contract] })
 
-        if (!cars?.dataValues) {
+        if (!cars[0]?.dataValues) {
             return res.status(404).send({ message: "Cars not found" })
         }
-
         return res.status(200).send(cars)
+
     } catch (error) {
         errorHandler(res, error)
     }
@@ -55,15 +59,16 @@ const getCarById = async (req, res) => {
 const updateCar = async (req, res) => {
     try {
         const { id } = req.params
-        const { year, price, description, fuel_type, car_type, gearBox, engine, max_speed, img, modelId, colorId, brandId } = req.body
 
-        const car = await Car.findByPk(id)
+        const car = await Car.findByPk(id, { include: [Brand, Model, Color, Contract] })
 
         if (!car?.dataValues) {
             return res.status(404).send({ message: "Car not found" })
         }
 
-        await car.update({ year, price, description, fuel_type, car_type, gearBox, engine, max_speed, img, modelId, colorId, brandId })
+        const { error, value } = carValidation(req.body)
+
+        await car.update({ ...value })
 
         return res.status(200).send({ message: "Car updated", car: car.dataValues })
 

@@ -19,7 +19,7 @@ const Contract = sequelize.define("contract", {
     term:{
         type: DataTypes.DATE,
     },
-    fisrt_payment:{
+    first_payment:{
         type: DataTypes.DECIMAL(10,2),
     },
     month_day:{

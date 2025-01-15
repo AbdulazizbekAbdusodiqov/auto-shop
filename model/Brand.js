@@ -9,6 +9,9 @@ const Brand = sequelize.define('brand',{
     },
     name: {
         type: DataTypes.STRING,
+    },
+    description: {
+        type: DataTypes.STRING,
     }
 },{
     freezeTableName: true

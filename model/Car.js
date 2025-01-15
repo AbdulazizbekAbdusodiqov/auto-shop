@@ -20,19 +20,22 @@ const Car = sequelize.define("car", {
         type: DataTypes.STRING,
     },
     fuel_type: {
-        type: DataTypes.ENUM("Petrol", "Diesel", "metan", "Electric", "Hybrid")
+        type: DataTypes.ENUM("petrol", "diesel", "metan", "electric", "hybrid")
     },
     car_type: {
-        type: DataTypes.ENUM("Sedan", "Hatchback", "SUV", "Coupe", "Convertible", "Wagon", "Van", "Pickup", "Minivan")
+        type: DataTypes.ENUM("sedan", "hatchback", "SUV", "coupe", "convertible", "wagon", "van", "pickup", "minivan")
     },
     gearBox: {
-        type: DataTypes.ENUM("Manual", "Automatic")
+        type: DataTypes.ENUM("manual", "automatic")
     },
     engine: {
         type: DataTypes.STRING
     },
     max_speed: {
         type: DataTypes.INTEGER
+    },
+    VIN : {
+        type: DataTypes.STRING(17) 
     },
     img: {
         type: DataTypes.STRING

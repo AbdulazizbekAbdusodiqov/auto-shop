@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
-const Admin = require("./Admin");
 const Customer = require("./Customers");
+const Contract = require("./Contract");
 
 const Payment = sequelize.define("payment",{
     id:{
@@ -26,8 +26,8 @@ const Payment = sequelize.define("payment",{
     freezeTableName: true,
 });
 
-Admin.hasMany(Payment);
-Payment.belongsTo(Admin);
+Contract.hasMany(Payment);
+Payment.belongsTo(Contract);
 
 Customer.hasMany(Payment);
 Payment.belongsTo(Customer);

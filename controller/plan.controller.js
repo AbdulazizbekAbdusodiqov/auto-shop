@@ -1,14 +1,26 @@
 const errorHandler = require("../helpers/errorHandler")
 const Contract = require("../model/Contract")
 const Plan = require("../model/Plan")
+const { planValidation } = require("../validations/plan.validation")
 
 
 
 const createPlan = async (req, res) => {
     try {
-        const { month, markup_rate } = req.body
 
-        const plan = await Plan.create({ month, markup_rate})
+        const {error, value} = planValidation(req.body)
+
+        if(error){
+            return errorHandler(error, res)
+        }
+
+        const oldPlan = await Plan.findOne({where : {month : value.month}})
+
+        if(oldPlan?.dataValues){
+            return res.status(400).send({message: "Plan already exists"})
+        }
+
+        const plan = await Plan.create({...value})
 
         return res.status(201).send({message: "Plan created", plan})
 
@@ -21,7 +33,7 @@ const getPlans = async (req, res) => {
     try {
         const plans = await Plan.findAll({include : Contract})
         
-        if (!plans?.dataValues) {
+        if (!plans[0]?.dataValues) {
             return res.status(404).send({message: "Plans not found"})
         }
 
@@ -52,7 +64,6 @@ const getPlanById = async (req, res) => {
 const updatePlan = async (req, res) => {
     try {
         const { id } = req.params
-        const { month, markup_rate } = req.body
 
         const plan = await Plan.findByPk(id,{include : Contract})
 
@@ -60,7 +71,12 @@ const updatePlan = async (req, res) => {
             return res.status(404).send({message: "Plan not found"})
         }
 
-        await plan.update({ month, markup_rate })
+        const { error, value } = planValidation(req.body)
+        if(error){
+            return errorHandler(error, res)
+        }
+
+        await plan.update({...value} )
 
         return res.status(200).send({message: "Plan updated", plan})
 

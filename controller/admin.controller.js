@@ -3,6 +3,7 @@ const Admin = require("../model/Admin");
 const Contract = require("../model/Contract");
 const bcrypt = require("bcrypt");
 const {adminValidation} = require("../validations/admin.validation");
+const { AdminJwt } = require("../service/jwt.service");
 
 const createAdmin = async (req, res) => {
     try {
@@ -20,10 +21,21 @@ const createAdmin = async (req, res) => {
         }
         
         const hashed_password = await bcrypt.hash(value.password, 7);
-        
-        const admin = await Admin.create({ ...value, hashed_password });
 
+        
+        
+        const admin = Admin.build({ ...value, hashed_password });
+        const payload = {
+            id: admin.id,
+            email: value.email,
+            role: "admin"
+        }
+        const tokens = AdminJwt.generateTokens(payload)
+        admin.hashed_refresh_token = tokens.refreshToken;
+        
+        await admin.save();
         return res.status(201).send(admin);
+
     } catch (error) {
         errorHandler(error, res);
     }
@@ -60,12 +72,21 @@ const getAdminById = async (req, res) => {
 const updateAdmin = async (req, res) => {
     try {
 
-        const { first_name, last_name, phone_number, email } = req.body;
         const admin = await Admin.findByPk(req.params.id,{include :Contract});
-        if (!admin) {
+        
+        if (!admin?.dataValues) {
             return res.status(404).json({ message: "Admin not found" });
         }
-        await admin.update({ first_name, last_name, phone_number, email });
+        const { error, value } = adminValidation(req.body);
+        if(error){
+            return errorHandler(error, res);
+        }
+        
+
+        const hashed_password = bcrypt.hashSync(value.password, 7);
+
+        await admin.update({ ...value, hashed_password });
+
         return res.status(200).send(admin.dataValues);
 
     } catch (error) {
@@ -78,12 +99,13 @@ const deleteAdmin = async (req, res) => {
 
         const admin = await Admin.findByPk(req.params.id);
  
-        if (!admin) {
+        if (!admin?.dataValues) {
             return res.status(404).json({ message: "Admin not found" });
         }
+
         await admin.destroy();
 
-        return res.status(204).send({message : "Admin deleted"});
+        return res.status(200).send({message : "Admin deleted"});
 
     } catch (error) {
         errorHandler(error, res);
