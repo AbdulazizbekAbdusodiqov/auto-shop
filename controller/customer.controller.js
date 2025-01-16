@@ -1,14 +1,16 @@
 const bcrypt = require("bcrypt")
 const config = require('config')
+const uuid  = require("uuid")
 const errorHandler = require("../helpers/errorHandler")
 const Brand = require("../model/Brand")
-const Customer = require("../model/Customers")
+const Customer = require("../model/Customer")
 const Model = require("../model/Model")
 const Color = require("../model/Color")
 const Ban = require("../model/Ban")
 const Contract = require("../model/Contract")
 const { customerValidation } = require("../validations/customer.validation")
 const { CustomerJwt } = require("../service/jwt.service")
+const mailService = require("../service/mail.service")
 
 const createCustomer = async (req, res) => {
     try {
@@ -25,20 +27,26 @@ const createCustomer = async (req, res) => {
 
         const hashed_password = bcrypt.hashSync(value.password, 7)
 
+        const activation_link = uuid.v4()
 
 
-        const customer = await Customer.create({ ...value, hashed_password })
+        const customer = await Customer.create({ ...value, hashed_password, activation_link })
         const payload = {
             id: customer.id,
             email: value.email,
             role: "customer"
         }
 
+        
         const tokens = CustomerJwt.generateTokens(payload)
-
+        
         customer.hashed_refresh_token = tokens.refreshToken
-
+        
         await customer.update({ ...value, hashed_refresh_token: tokens.refreshToken })
+        
+        await mailService.sendMailActivationCode(customer.email,
+             `${config.get("api_url")}${config.get("port")}/api/customer/activate/${activation_link}`
+         );
 
         return res.status(201).send({ customer, access_token: tokens.accessToken });
 
@@ -218,6 +226,32 @@ const refreshCustomerToken = async (req, res) => {
     }
 }
 
+const activateCustomer = async (req, res) => {
+    try {
+        const link = req.params.link;
+
+        const customer = await Customer.findOne({ where: { activation_link: link } });
+
+        if (!customer?.dataValues) {
+            return res.status(400).send({ message: "No such user found" })
+        }
+        if (customer.is_active) {
+            return res.status(400).send({ message: "user has already activated" })
+        }
+
+        await customer.update({ is_active: true })
+
+        res.send({
+            message: "Customer activated",
+            is_active: customer.is_active
+        })
+
+    } catch (error) {
+        errorHandler(error, res)
+    }
+}
+
+
 module.exports = {
     createCustomer,
     getCustomer,
@@ -226,5 +260,6 @@ module.exports = {
     deleteCustomer,
     loginCustomer,
     logoutCustomer,
-    refreshCustomerToken
+    refreshCustomerToken,
+    activateCustomer
 }

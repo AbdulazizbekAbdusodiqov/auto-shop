@@ -1,10 +1,12 @@
+const uuid = require("uuid")
+const config = require("config");
+const bcrypt = require("bcrypt");
 const errorHandler = require("../helpers/errorHandler");
 const Admin = require("../model/Admin");
 const Contract = require("../model/Contract");
-const bcrypt = require("bcrypt");
 const { adminValidation } = require("../validations/admin.validation");
 const { AdminJwt } = require("../service/jwt.service");
-const config = require("config")
+const mailService = require("../service/mail.service");
 
 const createAdmin = async (req, res) => {
     try {
@@ -23,9 +25,9 @@ const createAdmin = async (req, res) => {
 
         const hashed_password = await bcrypt.hash(value.password, 7);
 
+        const activation_link = uuid.v4()
 
-
-        const admin = await Admin.create({ ...value, hashed_password });
+        const admin = await Admin.create({ ...value, hashed_password, activation_link });
         const payload = {
             id: admin.id,
             email: value.email,
@@ -35,6 +37,11 @@ const createAdmin = async (req, res) => {
         const tokens = AdminJwt.generateTokens(payload)
 
         await admin.update({ hashed_refresh_token: tokens.refreshToken });
+
+        await mailService.sendMailActivationCode(admin.email,
+            `${config.get("api_url")}${config.get("port")}/api/admin/activate/${activation_link}`
+        );
+
 
         return res.status(201).send({ admin, accessToken: tokens.accessToken });
 
@@ -231,6 +238,30 @@ const refreshAdminToken = async (req, res) => {
     }
 };
 
+const activateAdmin = async (req, res) => {
+    try {
+        const link = req.params.link;
+
+        const admin = await Admin.findOne({ where: { activation_link: link } });
+
+        if (!admin?.dataValues) {
+            return res.status(400).send({ message: "No such admin found" })
+        }
+        if (admin.is_active) {
+            return res.status(400).send({ message: "admin has already activated" })
+        }
+
+        await admin.update({ is_active: true })
+
+        res.send({
+            message: "Admin activated",
+            is_active: admin.is_active
+        })
+
+    } catch (error) {
+        errorHandler(error, res)
+    }
+}
 
 
 module.exports = {
@@ -241,5 +272,6 @@ module.exports = {
     deleteAdmin,
     loginAdmin,
     logoutAdmin,
-    refreshAdminToken
+    refreshAdminToken,
+    activateAdmin
 }

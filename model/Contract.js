@@ -3,7 +3,7 @@ const sequelize = require("../config/db");
 const Car = require("./Car");
 const Plan = require("./Plan");
 const Admin = require("./Admin");
-const Customer = require("./Customers");
+const Customer = require("./Customer");
 
 
 const Contract = sequelize.define("contract", {

@@ -6,7 +6,8 @@ const {
     deleteCustomer,
     loginCustomer,
     logoutCustomer,
-    refreshCustomerToken
+    refreshCustomerToken,
+    activateCustomer
 
 } = require("../controller/customer.controller")
 const adminGuard = require("../middleware/admin.guard")
@@ -18,7 +19,8 @@ const router = require("express").Router()
 router.post("/", createCustomer)
 router.post("/login", loginCustomer)
 router.get("/logout", logoutCustomer)
-router.get("/refresh", refreshCustomerToken)
+router.get("/activate/:link", activateCustomer)
+router.get("/refresh",customerGuard, refreshCustomerToken)
 router.get("/", customerGuard, getCustomer)
 router.get("/:id", customerGuard, getCustomerById)
 router.put("/:id", customerGuard, customerSelfGuard, updateCustomer)

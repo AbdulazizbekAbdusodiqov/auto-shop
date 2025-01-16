@@ -1,7 +1,7 @@
 const errorHandler = require("../helpers/errorHandler")
 const Admin = require("../model/Admin")
 const Ban = require("../model/Ban")
-const Customer = require("../model/Customers")
+const Customer = require("../model/Customer")
 const { banValidation } = require("../validations/ban.validation")
 
 const createBan = async (req, res) => {

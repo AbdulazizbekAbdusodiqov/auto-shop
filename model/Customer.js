@@ -38,6 +38,9 @@ const Customer = sequelize.define("customer",
         address : {
             type : DataTypes.STRING
         },
+        activation_link: {
+            type : DataTypes.UUID
+        },
         hashed_refresh_token : {
             type : DataTypes.STRING
         }

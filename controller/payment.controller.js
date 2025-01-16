@@ -1,6 +1,6 @@
 const errorHandler = require("../helpers/errorHandler")
 const Contract = require("../model/Contract")
-const Customer = require("../model/Customers")
+const Customer = require("../model/Customer")
 const Payment = require("../model/Payment")
 const { paymentValidation } = require("../validations/payment.validation")
 
