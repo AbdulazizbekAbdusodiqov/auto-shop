@@ -163,42 +163,11 @@ const getSoldCarsDateRange = async (req, res) => {
     }
 };
 
-const getOverdueCustomers = async (req, res) => {
-    try {
-        const today = new Date();
-
-        const overdueContracts = await Contract.findAll({
-            where: {
-                term: {
-                    [Op.lt]: today 
-                },
-                is_active: true 
-            },
-            include: [Customer, Car]
-        });
-
-        const result = overdueContracts.map(contract => {
-            return {
-                customerName: `${contract.customer.first_name} ${contract.customer.last_name}`,
-                productName: contract.car.description,
-                contractNumber: contract.id,
-                overdueAmount: contract.monthly_payment,
-                overdueDays: Math.ceil((today - new Date(contract.term)) / (1000 * 60 * 60 * 24)) 
-            };
-        });
-
-        res.status(200).json(result);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: "Xatolik yuz berdi" });
-    }
-};
-
-
 module.exports = {
     createContract,
     getContracts,
     getContractById,
     updateContract,
-    deleteContract
+    deleteContract,
+    getSoldCarsDateRange
 }
