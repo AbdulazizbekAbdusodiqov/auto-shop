@@ -1,9 +1,9 @@
 const express = require("express")
 const config = require("config")
+const cookieParser = require("cookie-parser")
 const sequelize = require("./config/db")
 const mainRouter = require("./router/index.routes")
 const Payment = require("./model/Payment")
-const cookieParser = require("cookie-parser")
 
 const PORT = config.get("port")
 

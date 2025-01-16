@@ -27,7 +27,7 @@ const createCar = async (req, res) => {
 
 const getCars = async (req, res) => {
     try {
-        const cars = await Car.findAll({ include: [Brand, Model, Color, Contract] })
+        const cars = await Car.findAll({ include: [Brand, Model, Color] })
 
         if (!cars[0]?.dataValues) {
             return res.status(404).send({ message: "Cars not found" })
@@ -43,7 +43,7 @@ const getCarById = async (req, res) => {
     try {
         const { id } = req.params
 
-        const car = await Car.findByPk(id, { include: [Brand, Model, Color, Contract] })
+        const car = await Car.findByPk(id, { include: [Brand, Model, Color] })
 
         if (!car?.dataValues) {
             return res.status(404).send({ message: "Car not found" })

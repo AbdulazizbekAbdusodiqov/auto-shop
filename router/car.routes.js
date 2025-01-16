@@ -5,8 +5,8 @@ const customerGuard = require("../middleware/customer.guard")
 const router = require("express").Router()
 
 router.post("/", adminGuard, createCar)
-router.get("/", customerGuard, getCars)
-router.get("/:id", customerGuard, getCarById)
+router.get("/",  getCars)
+router.get("/:id",  getCarById)
 router.put("/:id", adminGuard, updateCar)
 router.delete("/:id", adminGuard, deleteCar)
 

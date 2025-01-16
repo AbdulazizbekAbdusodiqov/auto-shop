@@ -42,8 +42,7 @@ const createAdmin = async (req, res) => {
             `${config.get("api_url")}${config.get("port")}/api/admin/activate/${activation_link}`
         );
 
-
-        return res.status(201).send({ admin, accessToken: tokens.accessToken });
+        return res.status(201).send({ admin, accessToken: tokens.accessToken });    
 
     } catch (error) {
         errorHandler(error, res);
