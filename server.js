@@ -3,12 +3,14 @@ const config = require("config")
 const sequelize = require("./config/db")
 const mainRouter = require("./router/index.routes")
 const Payment = require("./model/Payment")
+const cookieParser = require("cookie-parser")
 
 const PORT = config.get("port")
 
 const app = express()
 
 app.use(express.json())
+app.use(cookieParser())
 
 app.use("/api", mainRouter)
 

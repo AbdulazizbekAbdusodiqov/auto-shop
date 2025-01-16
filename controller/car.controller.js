@@ -1,3 +1,4 @@
+const { Op } = require("sequelize")
 const errorHandler = require("../helpers/errorHandler")
 const Brand = require("../model/Brand")
 const Car = require("../model/Car")
@@ -96,6 +97,7 @@ const deleteCar = async (req, res) => {
         errorHandler(res, error)
     }
 }
+
 
 
 module.exports = {
