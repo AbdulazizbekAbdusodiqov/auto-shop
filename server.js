@@ -4,6 +4,8 @@ const cookieParser = require("cookie-parser")
 const sequelize = require("./config/db")
 const mainRouter = require("./router/index.routes")
 const Payment = require("./model/Payment")
+const errorHandlerMiddleware = require("./middleware/errorHandling.middleware")
+
 
 const PORT = config.get("port")
 
@@ -13,6 +15,10 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use("/api", mainRouter)
+
+
+app.use(errorHandlerMiddleware) 
+
 
 async function start() {
     try {
