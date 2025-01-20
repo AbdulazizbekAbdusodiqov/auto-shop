@@ -14,6 +14,13 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 
+app.engine("ejs", ejs.__express);
+app.set("view engine", "ejs");
+app.set("views", "views");
+app.use(express.static("views"));
+
+
+
 app.use("/api", mainRouter)
 
 

@@ -1,16 +1,13 @@
 const bcrypt = require("bcrypt")
 const config = require('config')
-const uuid  = require("uuid")
+const uuid = require("uuid")
+const mailService = require("../service/mail.service")
 const errorHandler = require("../helpers/errorHandler")
-const Brand = require("../model/Brand")
 const Customer = require("../model/Customer")
-const Model = require("../model/Model")
-const Color = require("../model/Color")
 const Ban = require("../model/Ban")
 const Contract = require("../model/Contract")
 const { customerValidation } = require("../validations/customer.validation")
 const { CustomerJwt } = require("../service/jwt.service")
-const mailService = require("../service/mail.service")
 
 const createCustomer = async (req, res) => {
     try {
@@ -37,16 +34,15 @@ const createCustomer = async (req, res) => {
             role: "customer"
         }
 
-        
         const tokens = CustomerJwt.generateTokens(payload)
-        
+
         customer.hashed_refresh_token = tokens.refreshToken
-        
+
         await customer.update({ ...value, hashed_refresh_token: tokens.refreshToken })
-        
+
         await mailService.sendMailActivationCode(customer.email,
-             `${config.get("api_url")}${config.get("port")}/api/customer/activate/${activation_link}`
-         );
+            `${config.get("api_url")}${config.get("port")}/api/customer/activate/${activation_link}`
+        );
 
         return res.status(201).send({ customer, access_token: tokens.accessToken });
 
@@ -216,9 +212,9 @@ const refreshCustomerToken = async (req, res) => {
         });
 
         return res.status(200).send({
-            message : "welcome to auto-shop",
-            refreshToken : customer.hashed_refresh_token,
-            accessToken : tokens.accessToken
+            message: "welcome to auto-shop",
+            refreshToken: customer.hashed_refresh_token,
+            accessToken: tokens.accessToken
         })
 
     } catch (error) {

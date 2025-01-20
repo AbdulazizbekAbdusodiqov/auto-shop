@@ -13,6 +13,7 @@ const createAdmin = async (req, res) => {
         const { email } = req.body;
 
         const oldAdmin = await Admin.findOne({ where: { email } });
+        
         if (oldAdmin) {
             return res.status(400).json({ message: "Admin already exists" });
         }
