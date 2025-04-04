@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
-const Color = require("./Color");
-const Model = require("./Model");
-const Brand = require("./Brand");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import Color from "./Color.js";
+import Model from "./Model.js";
+import Brand from "./Brand.js";
 
 const Car = sequelize.define("car", {
     id: {
@@ -48,9 +48,9 @@ Car.belongsTo(Model)
 Model.hasMany(Car)
 
 Car.belongsTo(Color)
-Color.hasMany(Car)
+Model.hasMany(Car)
 
 Car.belongsTo(Brand)
 Brand.hasMany(Car)
 
-module.exports = Car;
+export default Car;

@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
 
 const Plan = sequelize.define("plan", {
     id: {
@@ -17,4 +17,4 @@ const Plan = sequelize.define("plan", {
     freezeTableName: true,
 });
 
-module.exports = Plan;
+export default Plan;

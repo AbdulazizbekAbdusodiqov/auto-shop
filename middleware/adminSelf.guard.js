@@ -1,6 +1,6 @@
-const errorHandler = require("../helpers/errorHandler")
+import errorHandler from "../helpers/errorHandler.js"
 
-module.exports = async function (req, res, next) {
+export default async function (req, res, next) {
     try {
 
         const id = req.params.id

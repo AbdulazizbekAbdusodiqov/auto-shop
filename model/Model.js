@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
-const Brand = require("./Brand");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import Brand from "./Brand.js";
 
-const Model =  sequelize.define('model',{
+const Model = sequelize.define('model',{
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -18,4 +18,4 @@ const Model =  sequelize.define('model',{
 Brand.hasMany(Model);
 Model.belongsTo(Brand);
 
-module.exports = Model;
+export default Model;

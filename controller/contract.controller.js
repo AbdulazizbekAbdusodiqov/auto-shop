@@ -1,15 +1,15 @@
-const { DATE, Op } = require("sequelize")
-const errorHandler = require("../helpers/errorHandler")
-const Admin = require("../model/Admin")
-const Car = require("../model/Car")
-const Contract = require("../model/Contract")
-const Customer = require("../model/Customer")
-const Payment = require("../model/Payment")
-const Plan = require("../model/Plan")
-const { contractValidation } = require("../validations/contract.validation")
+import { DATE, Op } from "sequelize"
+import errorHandler from "../helpers/errorHandler.js"
+import Admin from "../model/Admin.js"
+import Car from "../model/Car.js"
+import Contract from "../model/Contract.js"
+import Customer from "../model/Customer.js"
+import Payment from "../model/Payment.js"
+import Plan from "../model/Plan.js"
+import { contractValidation } from "../validations/contract.validation.js"
 
 
-const createContract = async (req, res) => {
+export const createContract = async (req, res) => {
     try {
 
         const{error, value} = contractValidation(req.body)
@@ -52,7 +52,7 @@ const createContract = async (req, res) => {
     }
 }
 
-const getContracts = async (req, res) => {
+export const getContracts = async (req, res) => {
     try {
         const contracts = await Contract.findAll({ include: [Admin, Customer, Plan, Car, Payment] })
 
@@ -66,7 +66,7 @@ const getContracts = async (req, res) => {
     }
 }
 
-const getContractById = async (req, res) => {
+export const getContractById = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -83,7 +83,7 @@ const getContractById = async (req, res) => {
     }
 }
 
-const updateContract = async (req, res) => {
+export const updateContract = async (req, res) => {
     try {
 
         const { id } = req.params
@@ -125,7 +125,7 @@ const updateContract = async (req, res) => {
     }
 }
 
-const deleteContract = async (req, res) => {
+export const deleteContract = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -143,7 +143,7 @@ const deleteContract = async (req, res) => {
         errorHandler( error, res)
     }
 }
-const getSoldCarsDateRange = async (req, res) => {
+export const getSoldCarsDateRange = async (req, res) => {
     try {
         const { startDate, endDate } = req.body;
 
@@ -163,11 +163,3 @@ const getSoldCarsDateRange = async (req, res) => {
     }
 };
 
-module.exports = {
-    createContract,
-    getContracts,
-    getContractById,
-    updateContract,
-    deleteContract,
-    getSoldCarsDateRange
-}

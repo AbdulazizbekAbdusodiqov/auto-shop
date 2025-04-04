@@ -1,7 +1,7 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
-const Admin = require("./Admin");
-const Customer = require("./Customer");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import Admin from "./Admin.js";
+import Customer from "./Customer.js";
 
 const Ban = sequelize.define("ban", {
     id:{
@@ -22,4 +22,4 @@ Ban.belongsTo(Admin);
 Customer.hasMany(Ban);
 Ban.belongsTo(Customer);
 
-module.exports = Ban;
+export default Ban;

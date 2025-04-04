@@ -1,10 +1,10 @@
-const errorHandler = require("../helpers/errorHandler")
-const Contract = require("../model/Contract")
-const Customer = require("../model/Customer")
-const Payment = require("../model/Payment")
-const { paymentValidation } = require("../validations/payment.validation")
+import errorHandler from "../helpers/errorHandler.js"
+import Contract from "../model/Contract.js"
+import Customer from "../model/Customer.js"
+import Payment from "../model/Payment.js"
+import { paymentValidation } from "../validations/payment.validation.js"
 
-const createPayment = async (req, res) => {
+export const createPayment = async (req, res) => {
     try {
         
         const {error, value} = paymentValidation(req.body)
@@ -21,7 +21,7 @@ const createPayment = async (req, res) => {
     }
 }
 
-const getPayments = async (req, res) => {
+export const getPayments = async (req, res) => {
     try {
         const payments = await Payment.findAll({ include: [Contract, Customer] })
 
@@ -35,7 +35,7 @@ const getPayments = async (req, res) => {
     }
 }
 
-const getPaymentById = async (req, res) => {
+export const getPaymentById = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -52,7 +52,7 @@ const getPaymentById = async (req, res) => {
     }
 }
 
-const updatePayment = async (req, res) => {
+export const updatePayment = async (req, res) => {
     try {
         const { id } = req.params
         
@@ -77,7 +77,7 @@ const updatePayment = async (req, res) => {
     }
 }
 
-const deletePayment = async (req, res) => {
+export const deletePayment = async (req, res) => {
     try {
         const payment = await Payment.findByPk(req.params.id)
         if (!payment) {
@@ -90,10 +90,3 @@ const deletePayment = async (req, res) => {
     }
 }
 
-module.exports = {
-    createPayment,
-    getPayments,
-    getPaymentById,
-    updatePayment,
-    deletePayment
-}

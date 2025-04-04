@@ -1,9 +1,9 @@
-const errorHandler = require("../helpers/errorHandler")
-const Car = require("../model/Car")
-const Color = require("../model/Color")
-const { colorValidation } = require("../validations/color.validation")
+import errorHandler from "../helpers/errorHandler.js"
+import Car from "../model/Car.js"
+import Color from "../model/Color.js"
+import { colorValidation } from "../validations/color.validation.js"
 
-const createColor = async (req, res) => {
+export const createColor = async (req, res) => {
     try {
 
         let { name } = req.body
@@ -29,7 +29,7 @@ const createColor = async (req, res) => {
     }
 }
 
-const getColors = async (req, res) => { 
+export const getColors = async (req, res) => { 
     try {
         const colors = await Color.findAll({include : Car})
         if (!colors?.dataValues) {
@@ -42,7 +42,7 @@ const getColors = async (req, res) => {
     }
 }
 
-const getColorById = async (req, res) => {
+export const getColorById = async (req, res) => {
     try {
         const color = await Color.findByPk(req.params.id, {include : Car})
         if (!color?.dataValues) {
@@ -55,7 +55,7 @@ const getColorById = async (req, res) => {
     }
 }
 
-const updateColor = async (req, res) => {
+export const updateColor = async (req, res) => {
     try {
         const { name } = req.body
         const color = await Color.findByPk(req.params.id,  {include : Car})
@@ -70,7 +70,7 @@ const updateColor = async (req, res) => {
     }
 }
 
-const deleteColor = async (req, res) => {
+export const deleteColor = async (req, res) => {
     try {
         const color = await Color.findByPk(req.params.id)
         
@@ -86,10 +86,3 @@ const deleteColor = async (req, res) => {
     }
 }   
 
-module.exports = {
-    createColor,
-    getColors,
-    getColorById,
-    updateColor,
-    deleteColor
-}

@@ -1,5 +1,5 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
 
 const Color = sequelize.define('color',{
     id: {
@@ -14,4 +14,4 @@ const Color = sequelize.define('color',{
     freezeTableName: true
 });
 
-module.exports = Color; 
+export default Color; 

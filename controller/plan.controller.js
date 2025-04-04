@@ -1,11 +1,11 @@
-const errorHandler = require("../helpers/errorHandler")
-const Contract = require("../model/Contract")
-const Plan = require("../model/Plan")
-const { planValidation } = require("../validations/plan.validation")
+import errorHandler from "../helpers/errorHandler.js"
+import Contract from "../model/Contract.js"
+import Plan from "../model/Plan.js"
+import { planValidation } from "../validations/plan.validation.js"
 
 
 
-const createPlan = async (req, res) => {
+export const createPlan = async (req, res) => {
     try {
 
         const {error, value} = planValidation(req.body)
@@ -29,7 +29,7 @@ const createPlan = async (req, res) => {
     }
 }
 
-const getPlans = async (req, res) => {
+export const getPlans = async (req, res) => {
     try {
         const plans = await Plan.findAll()
         
@@ -43,7 +43,7 @@ const getPlans = async (req, res) => {
     }
 }
 
-const getPlanById = async (req, res) => {
+export const getPlanById = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -61,7 +61,7 @@ const getPlanById = async (req, res) => {
 }
 
 
-const updatePlan = async (req, res) => {
+export const updatePlan = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -86,7 +86,7 @@ const updatePlan = async (req, res) => {
 }
 
 
-const deletePlan = async (req, res) => {
+export const deletePlan = async (req, res) => {
     try {
         
         const  {id} = req.params
@@ -104,10 +104,3 @@ const deletePlan = async (req, res) => {
 }
 
 
-module.exports = {
-    createPlan,
-    getPlans,
-    getPlanById,
-    updatePlan,
-    deletePlan
-}

@@ -1,11 +1,11 @@
-const { date } = require("joi")
-const errorHandler = require("../helpers/errorHandler")
-const Brand = require("../model/Brand")
-const Car = require("../model/Car")
-const Model = require("../model/Model")
-const {brandValidation} = require("../validations/brand.validation")
+// import { date } from "joi"
+import errorHandler from "../helpers/errorHandler.js"
+import Brand from "../model/Brand.js"
+import Car from "../model/Car.js"
+import Model from "../model/Model.js"
+import { brandValidation } from "../validations/brand.validation.js"
 
-const createBrand = async (req, res) => {
+export const createBrand = async (req, res) => {
     try {
         const {error, value} = brandValidation(req.body)
 
@@ -21,7 +21,7 @@ const createBrand = async (req, res) => {
     }
 }
 
-const getBrands = async (req, res) => { 
+export const getBrands = async (req, res) => { 
     try {
         const brands = await Brand.findAll({include:[Car, Model]})
         
@@ -37,7 +37,7 @@ const getBrands = async (req, res) => {
     }
 }
 
-const getBrandById = async (req, res) => {
+export const getBrandById = async (req, res) => {
     try {
         const brand = await Brand.findByPk(req.params.id)
         if (!brand?.dataValues) {
@@ -50,7 +50,7 @@ const getBrandById = async (req, res) => {
     }
 }
 
-const updateBrand = async (req, res) => {
+export const updateBrand = async (req, res) => {
     try {
         const brand = await Brand.findByPk(req.params.id, {include:[Car, Model]})
         if (!brand?.dataValues) {
@@ -65,7 +65,7 @@ const updateBrand = async (req, res) => {
     }
 }
 
-const deleteBrand = async (req, res) => {
+export const deleteBrand = async (req, res) => {
     try {
         const brand = await Brand.findByPk(req.params.id)
         if (!brand) {
@@ -80,10 +80,3 @@ const deleteBrand = async (req, res) => {
     }
 }   
 
-module.exports = {
-    createBrand,
-    getBrands,
-    getBrandById,
-    updateBrand,
-    deleteBrand
-}

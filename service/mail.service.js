@@ -1,12 +1,12 @@
-const nodemailer = require("nodemailer");
-const config = require("config");
+import { createTransport } from "nodemailer";
+import config from "config";
 
 class MailService {
     constructor(){
-        this.transporter = nodemailer.createTransport({
+        this.transporter = createTransport({
             service:"gmail",
-            host:config.get("smtp_host"),
-            port:config.get("smtp_port"),
+            host: config.get("smtp_host"),
+            port: config.get("smtp_port"),
             secure: false,
             auth: {
                 user: config.get("smtp_user"),
@@ -32,4 +32,4 @@ class MailService {
     }
 }
 
-module.exports = new MailService
+export default new MailService

@@ -1,9 +1,9 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
-const Car = require("./Car");
-const Plan = require("./Plan");
-const Admin = require("./Admin");
-const Customer = require("./Customer");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import Car from "./Car.js";
+import Plan from "./Plan.js";
+import Admin from "./Admin.js";
+import Customer from "./Customer.js";
 
 
 const Contract = sequelize.define("contract", {
@@ -38,7 +38,7 @@ const Contract = sequelize.define("contract", {
 Car.hasMany(Contract)
 Contract.belongsTo(Car)
 
-Plan.hasMany(Contract)
+Customer.hasMany(Contract)
 Contract.belongsTo(Plan)
 
 Admin.hasMany(Contract)
@@ -47,4 +47,4 @@ Contract.belongsTo(Admin)
 Customer.hasMany(Contract)
 Contract.belongsTo(Customer)
 
-module.exports = Contract;
+export default Contract;

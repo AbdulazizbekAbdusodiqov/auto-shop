@@ -1,12 +1,12 @@
-const { createBan, getBans, getBanById, updateBan, deleteBan } = require('../controller/ban.controller');
-const adminGuard = require('../middleware/admin.guard');
+import { createBan, getBans, getBanById, updateBan, deleteBan } from '../controller/ban.controller.js';
+import adminGuard from '../middleware/admin.guard.js';
+import express from "express"
+const router = express.Router()
 
-const routeer = require('express').Router();
+router.post('/',adminGuard, createBan);
+router.get('/',adminGuard, getBans);
+router.get('/:id',adminGuard, getBanById);
+router.put('/:id',adminGuard, updateBan);
+router.delete('/:id',adminGuard, deleteBan);
 
-routeer.post('/',adminGuard, createBan);
-routeer.get('/',adminGuard, getBans);
-routeer.get('/:id',adminGuard, getBanById);
-routeer.put('/:id',adminGuard, updateBan);
-routeer.delete('/:id',adminGuard, deleteBan);
-
-module.exports = routeer;
+export default router;

@@ -1,10 +1,10 @@
-const errorHandler = require("../helpers/errorHandler")
-const Admin = require("../model/Admin")
-const Ban = require("../model/Ban")
-const Customer = require("../model/Customer")
-const { banValidation } = require("../validations/ban.validation")
+import errorHandler from "../helpers/errorHandler.js"
+import Admin from "../model/Admin.js"
+import Ban from "../model/Ban.js"
+import Customer from "../model/Customer.js"
+import { banValidation } from "../validations/ban.validation.js"
 
-const createBan = async (req, res) => {
+export const createBan = async (req, res) => {
     try {
 
         const { error, value } = banValidation(req.body)
@@ -22,7 +22,7 @@ const createBan = async (req, res) => {
     }
 }
 
-const getBans = async (req, res) => {
+export const getBans = async (req, res) => {
     try {
         const bans = await Ban.findAll({ include: [Admin, Customer] })
 
@@ -36,7 +36,7 @@ const getBans = async (req, res) => {
     }
 }
 
-const getBanById = async (req, res) => {
+export const getBanById = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -53,7 +53,7 @@ const getBanById = async (req, res) => {
     }
 }
 
-const updateBan = async (req, res) => {
+export const updateBan = async (req, res) => {
     try {
         const { id } = req.params
         const ban = await Ban.findByPk(id, { include: [Admin, Customer] })
@@ -76,7 +76,7 @@ const updateBan = async (req, res) => {
     }
 }
 
-const deleteBan = async (req, res) => {
+export const deleteBan = async (req, res) => {
     try {
         const ban = await Ban.findByPk(req.params.id)
         if (!ban) {
@@ -89,10 +89,3 @@ const deleteBan = async (req, res) => {
     }
 }
 
-module.exports = {
-    createBan,
-    getBans,
-    getBanById,
-    updateBan,
-    deleteBan
-}

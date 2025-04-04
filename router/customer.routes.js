@@ -1,4 +1,4 @@
-const {
+import {
     getCustomer,
     createCustomer,
     getCustomerById,
@@ -8,13 +8,12 @@ const {
     logoutCustomer,
     refreshCustomerToken,
     activateCustomer
-
-} = require("../controller/customer.controller")
-const adminGuard = require("../middleware/admin.guard")
-const customerGuard = require("../middleware/customer.guard")
-const customerSelfGuard = require("../middleware/customerSelf.guard")
-
-const router = require("express").Router()
+} from "../controller/customer.controller.js"
+import adminGuard from "../middleware/admin.guard.js"
+import customerGuard from "../middleware/customer.guard.js"
+import customerSelfGuard from "../middleware/customerSelf.guard.js"
+import express from "express"
+const router = express.Router()
 
 router.post("/", createCustomer)
 router.post("/login", loginCustomer)
@@ -26,4 +25,4 @@ router.get("/:id", customerGuard, customerSelfGuard, getCustomerById)
 router.put("/:id", customerGuard, customerSelfGuard, updateCustomer)
 router.delete("/:id", adminGuard, deleteCustomer)
 
-module.exports = router
+export default router

@@ -1,7 +1,7 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/db");
-const Customer = require("./Customer");
-const Contract = require("./Contract");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import Customer from "./Customer.js";
+import Contract from "./Contract.js";
 
 const Payment = sequelize.define("payment",{
     id:{
@@ -32,4 +32,4 @@ Payment.belongsTo(Contract);
 Customer.hasMany(Payment);
 Payment.belongsTo(Customer);
 
-module.exports = Payment;
+export default Payment;

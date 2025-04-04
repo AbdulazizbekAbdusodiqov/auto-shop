@@ -1,14 +1,14 @@
-const uuid = require("uuid")
-const config = require("config");
-const bcrypt = require("bcrypt");
-const errorHandler = require("../helpers/errorHandler");
-const Admin = require("../model/Admin");
-const Contract = require("../model/Contract");
-const { adminValidation } = require("../validations/admin.validation");
-const { AdminJwt } = require("../service/jwt.service");
-const mailService = require("../service/mail.service");
+import { v4 } from "uuid";
+import config from "config";
+import { hash, hashSync, compareSync } from "bcrypt";
+import errorHandler from "../helpers/errorHandler.js";
+import Admin from "../model/Admin.js";
+import Contract from "../model/Contract.js";
+import { adminValidation } from "../validations/admin.validation.js";
+import { AdminJwt } from "../service/jwt.service.js";
+import mailService from "../service/mail.service.js";
 
-const createAdmin = async (req, res) => {
+export const createAdmin = async (req, res) => {
     try {
         const { email } = req.body;
 
@@ -24,9 +24,9 @@ const createAdmin = async (req, res) => {
             return errorHandler(error, res);
         }
 
-        const hashed_password = await bcrypt.hash(value.password, 7);
+        const hashed_password = await hash(value.password, 7);
 
-        const activation_link = uuid.v4()
+        const activation_link = v4()
 
         const admin = await Admin.create({ ...value, hashed_password, activation_link });
         const payload = {
@@ -50,7 +50,7 @@ const createAdmin = async (req, res) => {
     }
 }
 
-const getAdmins = async (req, res) => {
+export const getAdmins = async (req, res) => {
     try {
         const admins = await Admin.findAll({ include: Contract });
 
@@ -64,7 +64,7 @@ const getAdmins = async (req, res) => {
     }
 }
 
-const getAdminById = async (req, res) => {
+export const getAdminById = async (req, res) => {
     try {
 
         const admin = await Admin.findByPk(req.params.id, { include: Contract });
@@ -78,7 +78,7 @@ const getAdminById = async (req, res) => {
     }
 }
 
-const updateAdmin = async (req, res) => {
+export const updateAdmin = async (req, res) => {
     try {
 
         const admin = await Admin.findByPk(req.params.id, { include: Contract });
@@ -92,7 +92,7 @@ const updateAdmin = async (req, res) => {
         }
 
 
-        const hashed_password = bcrypt.hashSync(value.password, 7);
+        const hashed_password = hashSync(value.password, 7);
 
         await admin.update({ ...value, hashed_password });
 
@@ -103,7 +103,7 @@ const updateAdmin = async (req, res) => {
     }
 }
 
-const deleteAdmin = async (req, res) => {
+export const deleteAdmin = async (req, res) => {
     try {
 
         const admin = await Admin.findByPk(req.params.id);
@@ -121,7 +121,7 @@ const deleteAdmin = async (req, res) => {
     }
 }
 
-const loginAdmin = async (req, res) => {
+export const loginAdmin = async (req, res) => {
     try {
 
         const { email, password } = req.body
@@ -130,7 +130,7 @@ const loginAdmin = async (req, res) => {
         if (!admin?.dataValues) {
             return res.status(401).send({ message: "Invalid email or password" })
         }
-        const validPassword = bcrypt.compareSync(password, admin.hashed_password)
+        const validPassword = compareSync(password, admin.hashed_password)
         if (!validPassword) {
             return res.status(401).send({ message: "Invalid email or password" })
         }
@@ -161,7 +161,7 @@ const loginAdmin = async (req, res) => {
     }
 }
 
-const logoutAdmin = async (req, res) => {
+export const logoutAdmin = async (req, res) => {
     try {
 
         const { refreshToken } = req.cookies;
@@ -189,7 +189,7 @@ const logoutAdmin = async (req, res) => {
     }
 };
 
-const refreshAdminToken = async (req, res) => {
+export const refreshAdminToken = async (req, res) => {
     try {
         const { refreshToken } = req.cookies;
 
@@ -238,7 +238,7 @@ const refreshAdminToken = async (req, res) => {
     }
 };
 
-const activateAdmin = async (req, res) => {
+export const activateAdmin = async (req, res) => {
     try {
         const link = req.params.link;
 
@@ -263,15 +263,3 @@ const activateAdmin = async (req, res) => {
     }
 }
 
-
-module.exports = {
-    createAdmin,
-    getAdmins,
-    getAdminById,
-    updateAdmin,
-    deleteAdmin,
-    loginAdmin,
-    logoutAdmin,
-    refreshAdminToken,
-    activateAdmin
-}

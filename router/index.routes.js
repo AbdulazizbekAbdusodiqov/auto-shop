@@ -1,15 +1,16 @@
-const router = require("express").Router()
+import express from "express"
+const router = express.Router()
 
-const adminRouter = require("./admin.routes")
-const banRouter = require("./ban.routes")
-const brandRouter = require("./brand.routes")
-const carRouter = require("./car.routes")
-const colorRouter = require("./color.routes")
-const contractRouter = require("./contract.routes")
-const customerRouter = require("./customer.routes")
-const modelRouter = require("./model.routes")
-const paymentRouter = require("./payment.routes")
-const planRouter = require("./plan.routes")
+import adminRouter from "./admin.routes.js"
+import banRouter from "./ban.routes.js"
+import brandRouter from "./brand.routes.js"
+import carRouter from "./car.routes.js"
+import colorRouter from "./color.routes.js"
+import contractRouter from "./contract.routes.js"
+import customerRouter from "./customer.routes.js"
+import modelRouter from "./model.routes.js"
+import paymentRouter from "./payment.routes.js"
+import planRouter from "./plan.routes.js"
 
 router.use("/admin", adminRouter)
 router.use("/customer", customerRouter)
@@ -22,4 +23,4 @@ router.use("/contract", contractRouter)
 router.use("/payment", paymentRouter)
 router.use("/ban", banRouter)
 
-module.exports = router
+export default router

@@ -1,9 +1,9 @@
-const errorHandler = require("../helpers/errorHandler");
-const Brand = require("../model/Brand");
-const Model = require("../model/Model");
-const { modelValidation } = require("../validations/model.validation");
+import errorHandler from "../helpers/errorHandler.js";
+import Brand from "../model/Brand.js";
+import Model from "../model/Model.js";
+import { modelValidation } from "../validations/model.validation.js";
 
-const createModel = async (req, res) => {
+export const createModel = async (req, res) => {
     try {
         let {name} = req.body
         name = name.toLowerCase();
@@ -25,7 +25,7 @@ const createModel = async (req, res) => {
     }
 }
 
-const getModels = async (req, res) => {
+export const getModels = async (req, res) => {
     try {
         const models = await Model.findAll({include: Brand});
         if (models.length === 0) {
@@ -37,7 +37,7 @@ const getModels = async (req, res) => {
     }
 }
 
-const getModelById = async (req, res) => {
+export const getModelById = async (req, res) => {
     try {
         const model = await Model.findByPk(req.params.id, {include: Brand});
         if (!model?.dataValues) {
@@ -49,7 +49,7 @@ const getModelById = async (req, res) => {
     }
 }
 
-const updateModel = async (req, res) => {
+export const updateModel = async (req, res) => {
     try {
 
         const model = await Model.findByPk(req.params.id,{include: Brand});
@@ -67,7 +67,7 @@ const updateModel = async (req, res) => {
         errorHandler(error, res);
     }
 }
-const deleteModel = async (req, res) => {
+export const deleteModel = async (req, res) => {
     try {
         const model = await Model.findByPk(req.params.id);
 
@@ -80,12 +80,4 @@ const deleteModel = async (req, res) => {
     } catch (error) {
         errorHandler(error, res);
     }
-}
-
-module.exports = {
-    createModel,
-    getModels,
-    getModelById,
-    updateModel,
-    deleteModel
 }

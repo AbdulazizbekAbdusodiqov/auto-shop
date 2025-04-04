@@ -1,8 +1,7 @@
-const { createCar, getCars, getCarById, updateCar, deleteCar } = require("../controller/car.controller")
-const adminGuard = require("../middleware/admin.guard")
-const customerGuard = require("../middleware/customer.guard")
-
-const router = require("express").Router()
+import { createCar, getCars, getCarById, updateCar, deleteCar } from "../controller/car.controller.js"
+import adminGuard from "../middleware/admin.guard.js"
+import express from "express"
+const router = express.Router()
 
 router.post("/", adminGuard, createCar)
 router.get("/",  getCars)
@@ -10,4 +9,4 @@ router.get("/:id",  getCarById)
 router.put("/:id", adminGuard, updateCar)
 router.delete("/:id", adminGuard, deleteCar)
 
-module.exports = router
+export default router

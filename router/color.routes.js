@@ -1,14 +1,19 @@
-const { createColor, getColors, getColorById, updateColor, deleteColor } = require("../controller/color.controller")
-const adminGuard = require("../middleware/admin.guard")
-const customerGuard = require("../middleware/customer.guard")
+import {
+    createColor,
+    getColors,
+    getColorById,
+    updateColor,
+    deleteColor
+} from "../controller/color.controller.js"
+import adminGuard from "../middleware/admin.guard.js"
+import customerGuard from "../middleware/customer.guard.js"
+import express from "express"
+const router = express.Router()
 
-
-const router = require("express").Router()
-
-router.post("/",adminGuard, createColor)
+router.post("/", adminGuard, createColor)
 router.get("/", customerGuard, getColors)
 router.get("/:id", customerGuard, getColorById)
 router.put("/:id", adminGuard, updateColor)
 router.delete("/:id", adminGuard, deleteColor)
 
-module.exports = router
+export default router

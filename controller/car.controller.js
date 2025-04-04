@@ -1,13 +1,12 @@
-const { Op } = require("sequelize")
-const errorHandler = require("../helpers/errorHandler")
-const Brand = require("../model/Brand")
-const Car = require("../model/Car")
-const Color = require("../model/Color")
-const Contract = require("../model/Contract")
-const Model = require("../model/Model")
-const { carValidation } = require("../validations/car.validation")
+import errorHandler from "../helpers/errorHandler.js"
+import Brand from "../model/Brand.js"
+import Car from "../model/Car.js"
+import Color from "../model/Color.js"
+import Contract from "../model/Contract.js"
+import Model from "../model/Model.js"
+import { carValidation } from "../validations/car.validation.js"
 
-const createCar = async (req, res) => {
+export const createCar = async (req, res) => {
     try {
 
         const {error, value} = carValidation(req.body)
@@ -25,7 +24,7 @@ const createCar = async (req, res) => {
     }
 }
 
-const getCars = async (req, res) => {
+export const getCars = async (req, res) => {
     try {
         const cars = await Car.findAll({ include: [Brand, Model, Color] })
 
@@ -39,7 +38,7 @@ const getCars = async (req, res) => {
     }
 }
 
-const getCarById = async (req, res) => {
+export const getCarById = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -57,7 +56,7 @@ const getCarById = async (req, res) => {
 }
 
 
-const updateCar = async (req, res) => {
+export const updateCar = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -79,7 +78,7 @@ const updateCar = async (req, res) => {
 }
 
 
-const deleteCar = async (req, res) => {
+export const deleteCar = async (req, res) => {
     try {
         const { id } = req.params
 
@@ -100,10 +99,3 @@ const deleteCar = async (req, res) => {
 
 
 
-module.exports = {
-    createCar,
-    getCars,
-    getCarById,
-    updateCar,
-    deleteCar
-}

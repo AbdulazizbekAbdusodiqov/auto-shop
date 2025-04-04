@@ -1,15 +1,15 @@
-const bcrypt = require("bcrypt")
-const config = require('config')
-const uuid = require("uuid")
-const mailService = require("../service/mail.service")
-const errorHandler = require("../helpers/errorHandler")
-const Customer = require("../model/Customer")
-const Ban = require("../model/Ban")
-const Contract = require("../model/Contract")
-const { customerValidation } = require("../validations/customer.validation")
-const { CustomerJwt } = require("../service/jwt.service")
+import { hashSync, compareSync } from "bcrypt"
+import config from 'config'
+import { v4 } from "uuid"
+import mailService from "../service/mail.service.js"
+import errorHandler from "../helpers/errorHandler.js"
+import Customer from "../model/Customer.js"
+import Ban from "../model/Ban.js"
+import Contract from "../model/Contract.js"
+import { customerValidation } from "../validations/customer.validation.js"
+import { CustomerJwt } from "../service/jwt.service.js"
 
-const createCustomer = async (req, res) => {
+export const createCustomer = async (req, res) => {
     try {
 
         const { error, value } = customerValidation(req.body)
@@ -22,9 +22,9 @@ const createCustomer = async (req, res) => {
             return res.status(400).json({ message: "Customer already exists" });
         }
 
-        const hashed_password = bcrypt.hashSync(value.password, 7)
+        const hashed_password = hashSync(value.password, 7)
 
-        const activation_link = uuid.v4()
+        const activation_link = v4()
 
 
         const customer = await Customer.create({ ...value, hashed_password, activation_link })
@@ -51,7 +51,7 @@ const createCustomer = async (req, res) => {
     }
 }
 
-const getCustomer = async (req, res) => {
+export const getCustomer = async (req, res) => {
     try {
         const customer = await Customer.findAll({ include: [Contract, Ban] })
         if (!customer[0]?.dataValues) {
@@ -64,7 +64,7 @@ const getCustomer = async (req, res) => {
     }
 }
 
-const getCustomerById = async (req, res) => {
+export const getCustomerById = async (req, res) => {
     try {
         const customer = await Customer.findByPk(req.params.id, { include: [Contract, Ban] })
         if (!customer?.dataValues) {
@@ -78,7 +78,7 @@ const getCustomerById = async (req, res) => {
 }
 
 
-const updateCustomer = async (req, res) => {
+export const updateCustomer = async (req, res) => {
     try {
 
         const customer = await Customer.findByPk(req.params.id, { include: [Contract, Ban] })
@@ -101,7 +101,7 @@ const updateCustomer = async (req, res) => {
     }
 }
 
-const deleteCustomer = async (req, res) => {
+export const deleteCustomer = async (req, res) => {
     try {
         const customer = await Customer.findByPk(req.params.id)
         if (!customer?.dataValues) {
@@ -115,7 +115,7 @@ const deleteCustomer = async (req, res) => {
     }
 }
 
-const loginCustomer = async (req, res) => {
+export const loginCustomer = async (req, res) => {
     try {
         const { email, password } = req.body
 
@@ -123,7 +123,7 @@ const loginCustomer = async (req, res) => {
         if (!customer?.dataValues) {
             return res.status(401).send({ message: "Invalid email or password" })
         }
-        const validPassword = bcrypt.compareSync(password, customer.hashed_password)
+        const validPassword = compareSync(password, customer.hashed_password)
         if (!validPassword) {
             return res.status(401).send({ message: "Invalid email or password" })
         }
@@ -154,7 +154,7 @@ const loginCustomer = async (req, res) => {
     }
 }
 
-const logoutCustomer = async (req, res) => {
+export const logoutCustomer = async (req, res) => {
     try {
         const { refreshToken } = req.cookies
         if (!refreshToken) {
@@ -177,7 +177,7 @@ const logoutCustomer = async (req, res) => {
     }
 }
 
-const refreshCustomerToken = async (req, res) => {
+export const refreshCustomerToken = async (req, res) => {
     try {
         const { refreshToken } = req.cookies
         if (!refreshToken) {
@@ -222,7 +222,7 @@ const refreshCustomerToken = async (req, res) => {
     }
 }
 
-const activateCustomer = async (req, res) => {
+export const activateCustomer = async (req, res) => {
     try {
         const link = req.params.link;
 
@@ -247,15 +247,3 @@ const activateCustomer = async (req, res) => {
     }
 }
 
-
-module.exports = {
-    createCustomer,
-    getCustomer,
-    getCustomerById,
-    updateCustomer,
-    deleteCustomer,
-    loginCustomer,
-    logoutCustomer,
-    refreshCustomerToken,
-    activateCustomer
-}

@@ -1,7 +1,7 @@
-const errorHandler = require("../helpers/errorHandler")
-const { AdminJwt} = require("../service/jwt.service")
+import errorHandler from "../helpers/errorHandler.js"
+import { AdminJwt } from "../service/jwt.service.js"
 
-module.exports = async function (req, res, next) {
+export default async function (req, res, next) {
     try {
         const authorization = req.headers.authorization
 
